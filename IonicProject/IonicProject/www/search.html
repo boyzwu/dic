@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+         <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <script src="lib/ionic/js/ionic.bundle.js"></script>
+        <script src="cordova.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/services.js"></script>
+        <script language="javascript" type="text/javascript"> 
+        </script>
+    </head>
+    <body ng-app="myApp">
+        <ion-header-bar class="bar bar-header bar-balanced">
+      <div class="buttons">
+        <a class="button icon-left ion-chevron-left button-clear button-light" href="index.html">返回</a>
+      </div>
+      <h1 class="title"><b>查询单词</b></h1>
+      </ion-header-bar>
+      <br>
+      <br>  
+      <br>
+      <br> 
+          <ion-content ng-controller="Serach">
+             <div class="item item-input-inset">
+                  <label class="item-input-wrapper">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" placeholder="Search" name="word" ng-model="word">
+                  </label>
+                  <button class="button button-small">
+                    搜索
+                  </button>
+             </div>
+             <div class="card" >
+                <div class="item item-avatar" >
+                  <label class="item-text-wrap">{{English}}</label>
+                </div>
+             </div>
+             <div align="right">
+             <button class="button button-clear button-positive" ng-show="button1" ng-click="ChangState()">
+             点击查看更多
+             </button>
+             </div>
+             <div class="item item-avatar" ng-show="visible">
+                  <label class="item-text-wrap"> 
+                  dhvkbdhvbSKBLbl     
+                  </label>
+            </div>
+            <div align="right">
+            <button class="button button-clear button-positive" ng-show="button2" ng-click="ChangState1()">
+              收起
+            </button>
+            </div>
+        </ion-content>
+        <script>
+    angular.module("myApp", [])
+    .controller("Serach", function($scope,$http) {
+        $scope.word = sessionStorage.getItem("word");
+        $scope.visible=false;
+        $scope.button1=true;
+        $scope.button2=false;
+        $scope.ChangState=function(){
+            $scope.visible =!$scope.visible;
+            $scope.button1=!$scope.button1;
+            $scope.button2=!$scope.button2;
+        }
+        $scope.ChangState1=function(){
+            $scope.visible =!$scope.visible;
+            $scope.button2=!$scope.button1;
+            $scope.button2=!$scope.button2;
+        }
+    })
+    </script>
+    </body>
+</html>

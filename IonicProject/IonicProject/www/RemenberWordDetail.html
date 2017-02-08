@@ -1,0 +1,113 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>Detail</title>
+<link href="lib/ionic/css/ionic.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<script src="lib/ionic/js/ionic.bundle.js"></script>
+<script src="cordova.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pouchdb.min.js"></script>
+<script src="js/ng-cordova.min.js"></script>
+<script src="lib/ionic/js/ionic.bundle.min.js" ></script>
+<link rel="alternate" href="lib/ionic/css/ionic.min.css">
+<script language="javascript" type="text/javascript"></script>
+</head>
+<body ng-app="myApp" ng-controller="RemberDetail">
+<ion-view view-title="WordDetail">
+  <ion-content>
+    <div class="card">
+        <div class="item item-text-wrap" style="float:left;width:auto;">
+            <font color="#1A9E87" size="5" ng-bind="Word"></font><br/>
+            <font ng-bind="YinBiao"></font>
+        </div>
+        <div style="float:right;">
+            <button class="button button-large ion-volume-medium" style="background:#F5F2E9;">
+                <a ng-modle="FaYin"></a>
+            </button>
+        </div>
+    </div>
+    <div class="card">
+        <div class="item item-text-wrap" style="background:#F5F2E9;" ng-bind="YiShi"></div>
+        <div class="item item-divider" style="background:#FFFFFF;">
+            例句：
+        </div>
+        <div class="item item-text-wrap"  style="background:#F5F2E9;" ng-init="Str">
+            <ul>
+                <li ng-repeat="x in Str">{{x}}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="card" style="position:fixed;bottom:0;width:95%;">
+        <button class="button button-block button-positive" ng-click="Next();">下一个</button>
+    </div>
+  </ion-content>
+</ion-view>
+</body>
+</html>
+<script type="text/javascript" charset="utf-8">
+var query = "select * from TempTable";
+var db;
+var No=0;
+var Trans;
+var Id=0;
+angular.module("myApp", ['ionic','ngCordova'])
+.run(function($ionicPlatform, $cordovaSQLite) {
+    $ionicPlatform.ready(function() {
+        No = sessionStorage.getItem("num");
+        alert(No);
+        try
+        {
+            db = $cordovaSQLite.openDB("db");
+        }catch(error)
+        {
+            alert("打开数据库是出错");
+        }
+    });
+})
+.controller("RemberDetail", function($ionicPlatform,$scope,$http, $cordovaSQLite) {
+    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+    $ionicPlatform.ready(function() {
+        InitView();
+    });
+
+    function InitView()
+    {
+        $cordovaSQLite.execute(db, query, []).then(function(res) {
+                Id = res.rows.item(No).Id;
+                alert(Id);
+                $scope.Word = res.rows.item(No).En;
+                $scope.YinBiao = '/'+res.rows.item(No).Pron+'/';
+                $scope.YiShi = res.rows.item(No).Def;
+                var Detail = res.rows.item(No).Audio;
+                $scope.FaYin = Detail.substring(Detail.indexOf('http'),Detail.indexOf('</audio>'));
+                Trans = new Array();
+                var j=0;
+                var i=0;
+                for(;i<Detail.length;i++)
+                {
+                    Trans[j] = Detail.substring(Detail.indexOf('<orig>',i)+6,Detail.indexOf('</orig>',i));
+                    Trans[++j] = Detail.substring(Detail.indexOf('<trans>',i)+7,Detail.indexOf('</trans>',i));
+                    i = Detail.indexOf('</trans>',i)+8;
+                    j++;
+                    if(i+14 == Detail.length)
+                        break;
+                }
+                $scope.Str = Trans;
+            }, function (err) {
+                alert(err);
+                console.error(err);
+            });
+    }
+    
+    $scope.Next = function() {
+        var query1 = "update TempTable set ZT=1 where Id="+Id;
+        $cordovaSQLite.execute(db, query1, []).then(function(res) {},function (err) {
+            alert(err);
+            console.error(err);
+        });
+        self.location='RemenberWord.html';
+    };
+});
+</script>

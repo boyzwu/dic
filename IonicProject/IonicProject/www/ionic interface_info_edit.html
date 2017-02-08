@@ -1,0 +1,140 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>User Info</title>
+        <link href="css/ionic.min.css" rel="stylesheet">
+        <script src="js/ionic.bundle.min.js"></script>
+         <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/services.js"></script>
+        
+		<style>
+			.buttons {
+				text-align: left;
+			}
+			.banner {
+				text-align: center;
+				margin-top: 2em;
+			}
+			.banner img {
+				border-radius: 50%;
+			}
+			.info {
+				margin-left: 5em;
+				margin-bottom: 2.5em;
+			}
+			.info:first-child {
+				margin-top: 3em;
+			}
+			.content.has-header.padding {
+				text-align: center;
+			}
+		</style>
+    </head>
+    <body ng-app="myApp" ng-controller="UserInfo">
+		<ion-header-bar class="bar bar-header bar-balanced">
+			<div class="buttons">
+				<a class="button icon-left ion-chevron-left button-clear button-light" ng-click="reback()">返回</a>
+			</div>
+			<h1 class="title"><b>用户个人信息</b></h1>
+    	</ion-header-bar>
+
+        <ion-pane>
+            <ion-content>
+				<div class="banner">
+					<img src="img/bg_0.jpg" />
+				</div>
+                <div class="list" >
+					<label class="item item-input">
+						<span class="input-label">用户名：</span>
+						<input type="text" placeholder="" name="name" ng-model="sendData.name">
+					</label>
+					<label class="item item-input">
+						<span class="input-label">密码：</span>
+						<input type="password" name="ps" ng-model="sendData.ps" value="{{ps}}">
+					</label>
+					<div class="item item-input item-select">
+                    <div class="input-label">
+                     学历
+                    </div>
+                    <select name="edu" ng-model="sendData.edu" ng-options="x for (x,y) in sites"valu="{{edu}}">
+                    </select>
+                    </div>
+					<label class="item item-input">
+						<span class="input-label">邮箱：</span>
+						<input type="text" placeholder="" name="email" ng-model="sendData.email" value="{{email}}">
+					</label>
+				</div>
+				<div class="content has-header padding">
+					<p><button class="button button-balanced" ng-click="submit()">确定</button></p>
+				</div>
+            </ion-content>
+        </ion-pane>
+        <script>
+          angular.module('myApp', ['ionic'])
+          .run(function($ionicPlatform) {
+            $ionicPlatform.ready(function() {
+              // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+              // for form inputs)
+              if(window.cordova && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+              }
+              if(window.StatusBar) {
+                StatusBar.styleDefault();
+              }
+            });
+          })
+          
+        .controller("UserInfo", function($scope,$http) {
+        $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+            $scope.sendData= {
+                id:"",
+                name: "",
+                ps: "",
+                edu:"",
+                email:""
+            };
+            window.onload=function()
+                {
+                var value = sessionStorage.getItem("user"); 
+                var postdata="?uname="+value;
+                var url = "http://15rq136357.iask.in/RemberWords/UserInfoServlet.do"+postdata;
+                $http.post(url).success(function(data)
+                {
+                  var arrys = data.split('/');
+                  $scope.sendData.id=arrys[0];
+                  $scope.sendData.name=arrys[1];
+                  $scope.sendData.ps=arrys[2];
+                  $scope.sendData.edu=arrys[3];
+                  $scope.sendData.email=arrys[4];
+                }).error(function() {
+                  alert("请求失败");
+                });
+                } 
+                $scope.reback=function(){
+                self.location='index.html';
+               }
+               $scope.sites = {
+                    专科 : "专科",
+                    本科 : "本科",
+                    研究生 : "研究生",
+                    博士生 : "博士生"    
+                }
+                $scope.submit=function(){
+                    var postData = "?ID="+$scope.sendData.id+"&"+"name="+$scope.sendData.name+"&"+"ps="+$scope.sendData.ps+"&"+"edu="+$scope.sendData.edu+"&"+"email="+$scope.sendData.email;
+                    var url = "http://15rq136357.iask.in/RemberWords/TestUserServlet.do"+postData;
+                    $http.post(url).success(function(data){
+                        var b =data;
+                        if(data=="true"){
+                            alert("修改成功！");
+                            self.location='ionic interface_info.html';
+                        }else{
+                            alert("修改失败");
+                        }
+                    }) 
+                }
+           });  
+        </script>
+    </body>
+</html>

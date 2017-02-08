@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+        <!-- cordova script (this will be a 404 during development) -->
+        <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+        <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/services.js"></script>
+        <script language="javascript" type="text/javascript"> 
+        </script>
+    </head>
+    <body ng-app="myApp">
+        <ion-header-bar align-title="center" class="bar-dark">
+           <div class="h1 title" align="center" >
+             <div class="bar bar-header bar-balanced">
+             <h1 class="title">注册</h1>
+             </div>
+            </div>        
+        </ion-header-bar>
+        <ion-content ng-controller="RegistForm">
+            <div class="content has-header">
+            <div class="list">
+                <label class="item item-input">
+                <input type="text" placeholder="用户名" name="uname" ng-model="uname">
+                </label>
+                <label class="item item-input">
+                <input type="password" placeholder="密码" name="ps1" ng-model="ps1">
+                </label>
+                <label class="item item-input">
+                <input type="password" placeholder="确认密码" name="ps2" ng-model="ps2">
+                </label>
+                 <label class="item item-input">
+                <input type="text" placeholder="邮箱" name="email" ng-model="email">
+                </label>
+                <div class="item item-input item-select">
+                <div class="input-label">
+                学历
+                </div>
+                <select name="education" ng-model="education" ng-options="x for (x,y) in sites">
+                </select>
+                </div>
+            </div>
+            <div class="padding">
+            <button class="button button-block button-positive" ng-click="submit()">注册</button>
+            <button class="button button-block button-positive" ng-click="cancel()">取消</button>
+            <br>
+            </div>
+             </div>
+        </ion-content>
+<script>
+   ;
+</script>
+    </body>
+</html>

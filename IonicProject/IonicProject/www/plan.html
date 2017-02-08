@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+        <!-- cordova script (this will be a 404 during development) -->
+        <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+        <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/services.js"></script>
+        <script language="javascript" type="text/javascript"> 
+        </script>
+    </head>
+    <body ng-app="myApp">
+        <ion-header-bar align-title="center" class="bar-dark">
+           <div class="h1 title" align="center" >
+             <div class="bar bar-header bar-balanced">
+             <h1 class="title">计划</h1>
+             </div>
+            </div>        
+        </ion-header-bar>
+        <ion-content ng-controller="PlanList">
+            <div class="content has-header">
+            <div class="list">
+                <label class="item item-input">
+                <input type="text" placeholder="每日数量" name="num" ng-model="num">
+                </label>
+                <div class="item item-input item-select">
+                <div class="input-label">
+                选择词库
+                </div>
+                <select name="education" ng-model="lib" ng-options="x for (x,y) in liberary">
+                </select>
+                </div>
+                <div class="item item-input item-select">
+                <div class="input-label">
+                选择背诵方法
+                </div>
+                <div ng-init="sites">
+                <select name="education" ng-model="way" ng-options="x for (x,y) in sites">
+                </select>
+                </div>
+                </div>
+            </div>
+            <div class="padding">
+            <button class="button button-block button-positive" ng-click="submit()">保存</button>
+            <button class="button button-block button-positive" ng-click="cancel()">取消</button>
+            <br>
+            </div>
+             </div>
+        </ion-content>
+        <div class="tabs">
+      <a class="tab-item" href="#">
+        主页
+      </a>
+      <a class="tab-item" href="#"  ng-click="">
+        背
+      </a>
+      <a class="tab-item" href="#">
+        我的
+      </a>
+  </div>
+
+  </body>
+</html>

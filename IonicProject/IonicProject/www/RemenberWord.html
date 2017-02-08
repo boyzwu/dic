@@ -1,0 +1,103 @@
+<html >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>背单词</title>
+<link href="lib/ionic/css/ionic.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<script src="lib/ionic/js/ionic.bundle.js"></script>
+<script src="cordova.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pouchdb.min.js"></script>
+<script src="js/ng-cordova.min.js"></script>
+<script src="lib/ionic/js/ionic.bundle.min.js" ></script>
+<link rel="alternate" href="lib/ionic/css/ionic.min.css">
+<script language="javascript" type="text/javascript"></script>
+</head>
+<body ng-app="myApp" ng-controller="Rember">
+<ion-view view-title="RemenberWord">
+  <ion-content>
+    <div class="card">
+        <div class="item item-text-wrap" style="float:left;width:auto;">
+            <font color="#1A9E87" size="5" ng-bind="Word"></font><br/>
+            <font ng-bind="YinBiao"></font>
+        </div>
+        <div style="float:right;">
+            <button class="button button-large ion-volume-medium" style="background:#F5F2E9;">
+                <a ng-modle="FaYin"></a>
+            </button>
+        </div>
+    </div>
+    <div class="card" style="position:fixed;left:0;bottom:0;width:95%;">
+        <button class="button button-block button-positive" ng-click="Unknow();">不认识</button>
+        <button class="button button-block button-positive" ng-click="Know()">认识</button>
+    </div>
+  </ion-content>
+</ion-view>
+</body>
+</html>
+<script type="text/javascript" charset="utf-8">
+var query = "select * from TempTable";
+var db;
+var No=0;
+var Id=0;
+angular.module("myApp", ['ionic','ngCordova'])
+.run(function($ionicPlatform, $cordovaSQLite) {
+    $ionicPlatform.ready(function() {
+        try
+        {
+            db = $cordovaSQLite.openDB("db");
+        }catch(error)
+        {
+            alert("打开数据库是出错");
+        }
+    });
+})
+.controller("Rember", function($ionicPlatform,$scope,$http, $cordovaSQLite) {
+    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+    $ionicPlatform.ready(function() {
+        InitView();
+    });
+
+    function InitView()
+    {
+        $cordovaSQLite.execute(db, query, []).then(function(res) {
+            if(res.rows.length > 0) {
+                for(;;)
+                {
+                    if(res.rows.item(No).ZT==0)
+                    {
+                        Id = res.rows.item(No).Id;
+                        $scope.Word = res.rows.item(No).En;
+                        $scope.YinBiao = '/'+res.rows.item(No).Pron+'/';
+                        var Detail = res.rows.item(No).Audio;
+                        $scope.FaYin = Detail.substring(Detail.indexOf('http'),Detail.indexOf('</audio>'));
+                        break;
+                    }
+                    No++;
+                }
+            } else {
+                alert("No results found");
+                console.log("No results found");
+                }
+            }, function (err) {
+                alert(err);
+                console.error(err);
+            });
+    }
+    
+    $scope.Unknow = function() {
+        sessionStorage.setItem("num",No);
+        self.location='RemenberWordDetail.html';
+    };
+    $scope.Know = function() {
+        var query1 = "update TempTable set ZT=1 where Id="+Id;
+        $cordovaSQLite.execute(db, query1, []).then(function(res) {},function (err) {
+            alert(err);
+            console.error(err);
+        });
+        No++;
+        InitView();
+    };
+});
+</script>

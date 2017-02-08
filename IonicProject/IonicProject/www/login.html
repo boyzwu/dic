@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+    <head>
+        <meta charset="utf-8">
+          <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+    <script src="lib/ionic/js/ionic.bundle.min.js" ></script>
+    <link rel="alternate" href="lib/ionic/css/ionic.min.css">
+    <script language="javascript" type="text/javascript">
+</script>
+    </head>
+   <body ng-app="myApp">
+     <ion-header-bar align-title="center" class="bar-dark">
+        <div class="h1 title" align="center" >
+          <div class="h1 title" align="center" >
+             <div class="bar bar-header bar-balanced">
+             <h1 class="title">登录</h1>
+             </div>
+            </div>  
+        </div>      
+  </ion-header-bar>
+  <ion-content>
+     <div class="content has-header">
+
+        <ul id="loginForm" ng-controller="LoginForm">
+            <li><label class="item item-input"><input type="text" name="uname" placeholder="用户名" ng-model="uname" /></label></li>
+            <li><label class="item item-input"><input type="password" name="pword" placeholder="密码" ng-model="pword" /></label></li>
+          
+            <li><button class="button button-block button-positive" ng-click="submit()">登录</button></li>
+
+            <br>
+        </ul>
+    </div>
+</ion-content>
+ <ion-footer-bar align-title="left" class="bar-assertive" >
+      <br>
+      <br>
+      <div class="buttons" ng-controller="RegistTest">
+        <button class="button" ng-click="registtest()">注册</button>
+        <a href="main.html">忘记密码</a>
+      </div>
+    </ion-footer-bar>
+</body>
+</html>

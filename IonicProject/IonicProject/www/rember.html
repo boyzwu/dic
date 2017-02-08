@@ -1,0 +1,163 @@
+<html >
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>菜鸟教程(runoob.com)</title>
+        <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+    <script src="js/pouchdb.min.js"></script>
+    <script src="js/ng-cordova.min.js"></script>
+    <script src="lib/ionic/js/ionic.bundle.min.js" ></script>
+    <link rel="alternate" href="lib/ionic/css/ionic.min.css">
+    <script language="javascript" type="text/javascript"></script>
+    </head>
+    <body ng-app="myApp">
+    <ion-header-bar align-title="center" class="bar-dark">
+        <div class="h1 title" align="center" >
+          <div class="h1 title" align="center" >
+             <div class="bar bar-header bar-balanced">
+             <h1 class="title">one word</h1>
+             </div>
+            </div>  
+        </div>      
+  </ion-header-bar>
+  <ion-content ng-controller="RemberWord">
+    <div class="bar bar-subheader">
+      <button class="button icon-left ion-chevron-left button-clear button-dark"></button>
+      <h1 class="title" ng-click="return()">second day</h1>  
+    </div>
+	<div class="content has-subheader ionic-pseudo">
+	<div class="card">
+	<div class="button  col col-center">
+	   已累计学习{{sum}}词
+	</div>
+	</div>
+    <div class="card">
+        <div class="button ">
+          {{DayWords}}
+		  <div class="item balanced">
+		  <h2>今日单词</h2>
+		  </div> 
+        </div>
+        <div class="button ">
+          {{NewWords}}
+		<div class="item energized">
+		<h2>新词数</h2>
+		</div> 
+        </div>
+		<div class="button ">
+          {{CompleteWords}}
+		<div class="item assertive">
+		<h2>已完成</h2>
+		</div> 
+        </div>
+		<div class="card">
+		<button class="button button-calm col col-center" ng-click="GoRemenber()">开始学习</button>
+		</div>
+      </div>
+	  </div>
+    </ion-content>
+    <div class="bar bar-footer">
+      <div class="bar bar-footer">
+        <div class="button-bar">
+          <a class="button button-balanced" href="index.html"><i class="icon ion-home">首页</i></a>
+          <a class="button button-energized" href="remberWords.html"><i class="icon ion-star">背</i></a>
+          <a class="button button-assertive" href="ionic interface_info.html"><i class="icon ion-gear-a">我的</i></a>
+        </div>
+      </div>
+    </div>
+<script>
+"use strict";
+var sum=0;
+var ThisDate;
+var Today;
+angular.module("myApp", ['ionic','ngCordova'])
+.controller("RemberWord", function($ionicPlatform,$scope,$http, $cordovaSQLite) {
+  $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+  $ionicPlatform.ready(function() {
+      //从session中取道每天的计划背词量
+      //$scope.DayWords=parseInt(sessionStorage.getItem());
+      $scope.DayWords=20;
+      InitDB();
+      alert("初始化成功");
+  });
+      
+
+
+  function InitDB()
+  {
+      try
+      {
+        var db = $cordovaSQLite.openDB("db");
+      }catch(error)
+      {
+        alert("打开数据库是出错");
+      }
+      ThisDate = new Date();
+      var test = "select Username from Plan";
+      $cordovaSQLite.execute(db, test, []).then(function(res) {
+          if(res.rows.length > 0)
+          {
+            Today = res.rows.item(0).Username;
+            alert(Today);
+          }
+      }, function (err) {
+          alert("出现错误");
+          console.error(err);
+      });
+alert(Today);
+      /*if(ThisDay != Today)
+      {
+        alert("hjlsgahdjhdla0");
+        var query = "insert into TempTable select * from Dict limit "+0+","+$scope.DayWords;
+        $cordovaSQLite.execute(db, query, []).then(function(res) {
+        }, function (err) {
+            alert(err);
+            console.error(err);
+        });
+        query = "update Plan set ThisDay="+ThisDate;
+        $cordovaSQLite.execute(db, query, []).then(function(res) {
+        }, function (err) {
+            alert(err);
+            console.error(err);
+        });
+      }*/
+      
+      //统计已学习多少词汇
+      query = "select count(*) sum from Dict where ZT=1";
+      $cordovaSQLite.execute(db, query, []).then(function(res) {
+          $scope.sum=parseInt(res.rows.item(0).sum);
+      }, function (err) {
+            alert(err);
+            console.error(err);
+      });
+
+      //统计今天还没有背的单词数和已背数
+      query = "select count(Id) no from TempTable where ZT=0";
+      $cordovaSQLite.execute(db, query, []).then(function(res) {
+          $scope.NewWords=parseInt(res.rows.item(0).no);
+          $scope.CompleteWords = $scope.DayWords - $scope.NewWords;
+      }, function (err) {
+            alert(err);
+            console.error(err);
+      });
+        $cordovaSQLite.removeDB("db");
+  };
+
+  $scope.return=function()
+  {
+    $ionicHistory.goBack();
+  };
+
+  $scope.GoRemenber = function()
+  {
+    self.location='RemenberWord.html';
+  };
+});
+</script>
+</body>
+</html>
