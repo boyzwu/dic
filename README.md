@@ -1,2 +1,3 @@
 # dic
 ionic开发英汉词典app
+设计这个软件使用ionic框架，开发语言主要有java、Mysql、Angularjs等，使用java 的servlet技术作为服务器端开发语言。MySql数据库技术可以实现服务器端与数据库的双向交互。使用Angularjs的$http请求与服务端进行交互。通过sqlite数据库存储词库在本地，通过安装js访问sqlite的插件读取本地数据。
